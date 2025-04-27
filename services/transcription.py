@@ -32,18 +32,15 @@ logging.basicConfig(level=logging.INFO)
 # Set the default local storage directory
 STORAGE_PATH = "/tmp/"
 
-def process_transcription(media_url, output_type, max_chars=56, language=None,):
+def process_transcription(media_url, output_type, max_chars=56, language=None, model_size="small"):
     """Transcribe media and return the transcript, SRT or ASS file path."""
-    logger.info(f"Starting transcription for media URL: {media_url} with output type: {output_type}")
+    logger.info(f"Starting transcription for media URL: {media_url} with output type: {output_type} using {model_size} model")
     input_filename = download_file(media_url, os.path.join(STORAGE_PATH, 'input_media'))
     logger.info(f"Downloaded media to local file: {input_filename}")
 
     try:
-        model = whisper.load_model("base")
-        logger.info("Loaded Whisper model")
-
-        # result = model.transcribe(input_filename)
-        # logger.info("Transcription completed")
+        model = whisper.load_model(model_size)
+        logger.info(f"Loaded Whisper {model_size} model")
 
         if output_type == 'transcript':
             result = model.transcribe(input_filename, language=language)
